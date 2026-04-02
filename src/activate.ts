@@ -14,12 +14,10 @@ declare const growiFacade: {
 };
 
 export const activate = (): void => {
-  console.log('[chat-style] activate() called');
   if (typeof growiFacade === 'undefined' || growiFacade.markdownRenderer == null) {
     console.warn('[chat-style] growiFacade not available');
     return;
   }
-  console.log('[chat-style] growiFacade.markdownRenderer found');
 
   const { optionsGenerators } = growiFacade.markdownRenderer;
 
@@ -29,7 +27,6 @@ export const activate = (): void => {
     const options = origView(...args);
     injectStyles();
     const iconMap = ensureIconMap();
-    console.log('[chat-style] customGenerateViewOptions: iconMap size =', iconMap.size);
     options.remarkPlugins.push(remarkChatStyle(iconMap));
     return options;
   };
@@ -40,7 +37,6 @@ export const activate = (): void => {
     const options = origPreview(...args);
     injectStyles();
     const iconMap = ensureIconMap();
-    console.log('[chat-style] customGeneratePreviewOptions: iconMap size =', iconMap.size);
     options.remarkPlugins.push(remarkChatStyle(iconMap));
     return options;
   };
