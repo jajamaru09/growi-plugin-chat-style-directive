@@ -1,4 +1,4 @@
-import { fetchIconMap, getCachedIconMap } from './icon-fetcher';
+import { ensureIconMap } from './icon-fetcher';
 import { remarkChatStyle } from './remark-chat-style';
 import { injectStyles } from './styles';
 
@@ -21,9 +21,6 @@ export const activate = (): void => {
   }
   console.log('[chat-style] growiFacade.markdownRenderer found');
 
-  // アイコンマップの先行取得を開始（結果はキャッシュされる）
-  fetchIconMap();
-
   const { optionsGenerators } = growiFacade.markdownRenderer;
 
   // 閲覧モード
@@ -31,8 +28,8 @@ export const activate = (): void => {
   optionsGenerators.customGenerateViewOptions = (...args: any[]) => {
     const options = origView(...args);
     injectStyles();
-    const iconMap = getCachedIconMap() ?? new Map();
-    console.log('[chat-style] customGenerateViewOptions: iconMap size =', iconMap.size, '(null means fetch not complete yet:', getCachedIconMap() === null, ')');
+    const iconMap = ensureIconMap();
+    console.log('[chat-style] customGenerateViewOptions: iconMap size =', iconMap.size);
     options.remarkPlugins.push(remarkChatStyle(iconMap));
     return options;
   };
@@ -42,7 +39,7 @@ export const activate = (): void => {
   optionsGenerators.customGeneratePreviewOptions = (...args: any[]) => {
     const options = origPreview(...args);
     injectStyles();
-    const iconMap = getCachedIconMap() ?? new Map();
+    const iconMap = ensureIconMap();
     console.log('[chat-style] customGeneratePreviewOptions: iconMap size =', iconMap.size);
     options.remarkPlugins.push(remarkChatStyle(iconMap));
     return options;

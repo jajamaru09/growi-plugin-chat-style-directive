@@ -6,33 +6,35 @@ export function getCachedIconMap(): IconMap | null {
   return cachedIconMap;
 }
 
-export async function fetchIconMap(): Promise<IconMap> {
+export function ensureIconMap(): IconMap {
   if (cachedIconMap) {
-    console.log('[chat-style] fetchIconMap: returning cached', cachedIconMap.size, 'persons');
+    console.log('[chat-style] ensureIconMap: returning cached', cachedIconMap.size, 'persons');
     return cachedIconMap;
   }
 
   const iconMap: IconMap = new Map();
 
   try {
-    console.log('[chat-style] fetchIconMap: fetching /_api/v3/page?path=/chat-style-icons');
-    const res = await fetch('/_api/v3/page?path=/chat-style-icons', {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (!res.ok) {
-      console.warn('[chat-style] fetchIconMap: HTTP error', res.status);
-      return iconMap;
-    }
+    console.log('[chat-style] ensureIconMap: sync fetch /_api/v3/page?path=/chat-style-icons');
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/_api/v3/page?path=/chat-style-icons', false); // synchronous
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
 
-    const data = await res.json();
-    console.log('[chat-style] fetchIconMap: API response keys:', Object.keys(data));
-    const markdown: string = data.page?.revision?.body ?? '';
-    console.log('[chat-style] fetchIconMap: markdown length:', markdown.length, 'first 200 chars:', markdown.substring(0, 200));
-    parseIconMarkdown(markdown, iconMap);
-    console.log('[chat-style] fetchIconMap: parsed', iconMap.size, 'persons:', [...iconMap.entries()].map(([k, v]) => `${k}:[${[...v.keys()].join(',')}]`).join(', '));
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      console.log('[chat-style] ensureIconMap: API response keys:', Object.keys(data));
+      const markdown: string = data.page?.revision?.body ?? '';
+      console.log('[chat-style] ensureIconMap: markdown length:', markdown.length, 'first 200 chars:', markdown.substring(0, 200));
+      parseIconMarkdown(markdown, iconMap);
+      console.log('[chat-style] ensureIconMap: parsed', iconMap.size, 'persons:', [...iconMap.entries()].map(([k, v]) => `${k}:[${[...v.keys()].join(',')}]`).join(', '));
+    }
+    else {
+      console.warn('[chat-style] ensureIconMap: HTTP error', xhr.status);
+    }
   }
   catch (e) {
-    console.warn('[chat-style] fetchIconMap: error:', e);
+    console.warn('[chat-style] ensureIconMap: error:', e);
   }
 
   cachedIconMap = iconMap;
