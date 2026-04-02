@@ -13,11 +13,11 @@ export function remarkChatStyle(iconMap: IconMap) {
   }
 
   return () => (tree: any) => {
-    console.debug('[chat-style] remark plugin running, knownEmotions:', [...knownEmotions]);
+    console.log('[chat-style] remark plugin running, knownEmotions:', [...knownEmotions]);
     visit(tree, 'containerDirective', (node: any) => {
       if (node.name !== 'chat-style') return;
 
-      console.debug('[chat-style] found ::::chat-style node, children:', node.children?.length, 'types:', node.children?.map((c: any) => `${c.type}:${c.name}`));
+      console.log('[chat-style] found ::::chat-style node, children:', node.children?.length, 'types:', node.children?.map((c: any) => `${c.type}:${c.name}`));
 
       // ::::chat-style → div.chat-style-container に変換
       node.data = {
@@ -30,11 +30,11 @@ export function remarkChatStyle(iconMap: IconMap) {
         if (child.type !== 'containerDirective') continue;
 
         const info = parseDirectiveName(child.name, knownEmotions);
-        console.debug('[chat-style] child directive:', child.name, '→ parsed:', info);
+        console.log('[chat-style] child directive:', child.name, '→ parsed:', info);
         if (!info) continue;
 
         const iconUrl = getIconUrl(iconMap, info.name, info.emotion);
-        console.debug('[chat-style] iconUrl for', info.name, info.emotion, ':', iconUrl);
+        console.log('[chat-style] iconUrl for', info.name, info.emotion, ':', iconUrl);
 
         // メッセージラッパー div に変換
         child.data = {

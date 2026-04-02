@@ -14,12 +14,12 @@ declare const growiFacade: {
 };
 
 export const activate = (): void => {
-  console.debug('[chat-style] activate() called');
+  console.log('[chat-style] activate() called');
   if (typeof growiFacade === 'undefined' || growiFacade.markdownRenderer == null) {
     console.warn('[chat-style] growiFacade not available');
     return;
   }
-  console.debug('[chat-style] growiFacade.markdownRenderer found');
+  console.log('[chat-style] growiFacade.markdownRenderer found');
 
   // アイコンマップの先行取得を開始（結果はキャッシュされる）
   fetchIconMap();
@@ -32,7 +32,7 @@ export const activate = (): void => {
     const options = origView(...args);
     injectStyles();
     const iconMap = getCachedIconMap() ?? new Map();
-    console.debug('[chat-style] customGenerateViewOptions: iconMap size =', iconMap.size, '(null means fetch not complete yet:', getCachedIconMap() === null, ')');
+    console.log('[chat-style] customGenerateViewOptions: iconMap size =', iconMap.size, '(null means fetch not complete yet:', getCachedIconMap() === null, ')');
     options.remarkPlugins.push(remarkChatStyle(iconMap));
     return options;
   };
@@ -43,7 +43,7 @@ export const activate = (): void => {
     const options = origPreview(...args);
     injectStyles();
     const iconMap = getCachedIconMap() ?? new Map();
-    console.debug('[chat-style] customGeneratePreviewOptions: iconMap size =', iconMap.size);
+    console.log('[chat-style] customGeneratePreviewOptions: iconMap size =', iconMap.size);
     options.remarkPlugins.push(remarkChatStyle(iconMap));
     return options;
   };
