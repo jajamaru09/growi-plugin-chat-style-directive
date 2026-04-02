@@ -77,15 +77,15 @@ export function remarkChatStyle(iconMap: IconMap) {
               hProperties: { className: ['chat-style-body'] },
             },
             children: [
-              // 名前
-              {
-                type: 'paragraph',
+              // 名前（showName が false なら非表示）
+              ...(info.showName ? [{
+                type: 'paragraph' as const,
                 data: {
                   hName: 'div',
                   hProperties: { className: ['chat-style-name'] },
                 },
-                children: [{ type: 'text', value: info.name }],
-              },
+                children: [{ type: 'text' as const, value: info.name }],
+              }] : []),
               // 吹き出し
               {
                 type: 'containerDirective',
