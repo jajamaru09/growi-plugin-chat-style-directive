@@ -46,7 +46,7 @@ export function parseIconMarkdown(markdown: string, iconMap: IconMap): void {
   let currentName: string | null = null;
 
   const headingRe = /^##\s+(.+)$/;
-  const itemRe = /^-\s+(\S+?):\s*\[.*?\]\((.+?)\)\s*$/;
+  const itemRe = /^-\s+(\S+?):\s*!?\[.*?\]\((.+?)\)\s*$/;
 
   for (const line of lines) {
     const headingMatch = line.match(headingRe);
