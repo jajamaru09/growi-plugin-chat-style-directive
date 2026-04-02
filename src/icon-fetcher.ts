@@ -2,10 +2,9 @@ export type IconMap = Map<string, Map<string, string>>;
 
 let cachedIconMap: IconMap | null = null;
 
-export function getCachedIconMap(): IconMap | null {
-  return cachedIconMap;
-}
-
+// 同期XHRを使用する理由:
+// remarkプラグインは同期的なAST変換のため、非同期fetchだと最初のレンダリングに間に合わない。
+// 初回のみ同期リクエストが走り、以降はキャッシュから即座に返す。
 export function ensureIconMap(): IconMap {
   if (cachedIconMap) {
     return cachedIconMap;
@@ -15,7 +14,7 @@ export function ensureIconMap(): IconMap {
 
   try {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/_api/v3/page?path=/chat-style-icons', false); // synchronous
+    xhr.open('GET', '/_api/v3/page?path=/chat-style-icons', false);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
 
