@@ -1,1 +1,0 @@
-const t=()=>{console.log("[chat-style-directive] activated")},i=()=>{console.log("[chat-style-directive] deactivated")},c="growi-plugin-chat-style-directive";window.pluginActivators==null&&(window.pluginActivators={});window.pluginActivators[c]={activate:t,deactivate:i};
