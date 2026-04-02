@@ -75,16 +75,48 @@ const CSS = `
 }
 
 .chat-style-bubble-left {
+  position: relative;
   background: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 0 12px 12px 12px;
   color: #212529;
 }
 
+.chat-style-bubble-left::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: -8px;
+  border-width: 6px 8px 6px 0;
+  border-style: solid;
+  border-color: transparent #dee2e6 transparent transparent;
+}
+
+.chat-style-bubble-left::after {
+  content: '';
+  position: absolute;
+  top: 11px;
+  left: -6px;
+  border-width: 5px 6px 5px 0;
+  border-style: solid;
+  border-color: transparent #ffffff transparent transparent;
+}
+
 .chat-style-bubble-right {
+  position: relative;
   background: #6f5de0;
   border-radius: 12px 0 12px 12px;
   color: #ffffff;
+}
+
+.chat-style-bubble-right::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: -8px;
+  border-width: 6px 0 6px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #6f5de0;
 }
 
 .chat-style-bubble-right a {
