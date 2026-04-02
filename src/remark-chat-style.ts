@@ -29,8 +29,8 @@ export function remarkChatStyle(iconMap: IconMap) {
       for (const child of (node.children ?? [])) {
         if (child.type !== 'containerDirective') continue;
 
-        const info = parseDirectiveName(child.name, knownEmotions);
-        console.log('[chat-style] child directive:', child.name, '→ parsed:', info);
+        const info = parseDirectiveName(child.name, knownEmotions, child.attributes);
+        console.log('[chat-style] child directive:', child.name, 'attributes:', child.attributes, '→ parsed:', info);
         if (!info) continue;
 
         const iconUrl = getIconUrl(iconMap, info.name, info.emotion);

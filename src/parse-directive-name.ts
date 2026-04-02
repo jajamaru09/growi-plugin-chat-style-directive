@@ -8,26 +8,22 @@ export interface ChatDirectiveInfo {
 export function parseDirectiveName(
   rawName: string,
   knownEmotions: Set<string>,
+  attributes?: Record<string, any>,
 ): ChatDirectiveInfo | null {
-  // Step 0: 末尾の :noname フラグを切り出し
-  let input = rawName;
-  let showName = true;
-  if (input.endsWith(':noname')) {
-    showName = false;
-    input = input.slice(0, -7); // remove ':noname'
-  }
+  // showName: attributes に noname があれば非表示
+  const showName = !(attributes && ('noname' in attributes));
 
   // Step 1: 末尾の -left / -right を切り出し
   let position: 'left' | 'right';
   let rest: string;
 
-  if (input.endsWith('-left')) {
+  if (rawName.endsWith('-left')) {
     position = 'left';
-    rest = input.slice(0, -5); // remove '-left'
+    rest = rawName.slice(0, -5); // remove '-left'
   }
-  else if (input.endsWith('-right')) {
+  else if (rawName.endsWith('-right')) {
     position = 'right';
-    rest = input.slice(0, -6); // remove '-right'
+    rest = rawName.slice(0, -6); // remove '-right'
   }
   else {
     return null; // position必須
