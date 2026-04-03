@@ -21,8 +21,8 @@ export const activate = (): void => {
 
   const { optionsGenerators } = growiFacade.markdownRenderer;
 
-  // 閲覧モード
-  const origView = optionsGenerators.generateViewOptions;
+  // 閲覧モード（他プラグインが既に customGenerateViewOptions を設定している場合はチェーンする）
+  const origView = optionsGenerators.customGenerateViewOptions ?? optionsGenerators.generateViewOptions;
   optionsGenerators.customGenerateViewOptions = (...args: any[]) => {
     const options = origView(...args);
     injectStyles();
@@ -31,8 +31,8 @@ export const activate = (): void => {
     return options;
   };
 
-  // エディタプレビュー
-  const origPreview = optionsGenerators.generatePreviewOptions;
+  // エディタプレビュー（同様にチェーンする）
+  const origPreview = optionsGenerators.customGeneratePreviewOptions ?? optionsGenerators.generatePreviewOptions;
   optionsGenerators.customGeneratePreviewOptions = (...args: any[]) => {
     const options = origPreview(...args);
     injectStyles();
